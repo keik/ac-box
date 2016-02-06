@@ -1,3 +1,3 @@
-# autocomplete-combobox
+# autocombo
 
-no-dependency autocomplete + combobox UI library
+no-dependency autocomplete + combobox library
