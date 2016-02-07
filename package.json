@@ -21,7 +21,9 @@
     "babelify": "^7.2.0",
     "browserify": "^13.0.0",
     "budo": "^8.0.4",
+    "debug": "^2.2.0",
     "eslint": "^1.10.3",
+    "jquery": "^2.2.0",
     "json-server": "^0.8.7",
     "mocha": "^2.4.5",
     "power-assert": "^1.2.0",
@@ -38,5 +40,8 @@
         }
       ]
     ]
+  },
+  "dependencies": {
+    "object-assign": "^4.0.1"
   }
 }

@@ -3,16 +3,46 @@
   <head>
     <meta charset="utf-8">
     <title>basic | autocombo examples</title>
+
+    <style>
+      .ac-menu-container {
+        background-color: white;
+        max-height: 400px;
+        overflow: auto;
+        border: 1px solid #cccccc;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .2)
+      }
+      .ac-menu {
+        padding: 6px 8px;
+      }
+      .ac-menu:hover {
+        background-color: #efefef;
+      }
+    </style>
+
   </head>
   <body>
 
     <input id="country-selector" type="text"/>
 
+    <script src="../node_modules/jquery/dist/jquery.js"></script>
     <script src="../dist/autocombo.js"></script>
     <script>
 
-      var countrySelectorEl = document.querySelector('#country-selector');
-      var autoCombobox = new AutoCombo(countrySelectorEl)
+      $(function() {
+        var countrySelectorEl = document.querySelector('#country-selector');
+        var autoCombo = new AutoCombo(countrySelectorEl);
+
+        $.ajax({
+          url: 'http://localhost:3000/countries'
+        }).done(function(countries) {
+          var menus =countries.map(function(country) {
+            return {value: country.id, text: country.name};
+          });
+          autoCombo.setMenus(menus);
+        });
+      });
 
     </script>
   </body>

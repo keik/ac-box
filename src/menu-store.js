@@ -1,26 +1,52 @@
-function MenuStore() {
+let d = require('debug')('menu-store')
 
-  this.handlers = []
+/*
+ * load deps
+ */
 
+let objectAssign = require('object-assign')
+
+/*
+ * load modules
+ */
+
+let EventEmitter = require('./event-emitter')
+
+/**
+ * @coustructor
+ * @param {EventEmitter} dippatcher
+ */
+function MenuStore(dispatcher) {
+  d('#MenuStore')
+  EventEmitter.call(this)
+  this.dispatcher = dispatcher
+  this.dispatcher.on('reset', _resetMenus.bind(this))
 }
 
-Object.assign(MenuStore.prototype, {
+// extend
+objectAssign(MenuStore.prototype, EventEmitter.prototype)
 
-  on: function(type, handler) {
-    if (!Array.isArray(this.handlers[type]))
-      this.handlers[type] = []
-    this.handlers[type].push(handler)
-  },
+/*
+ * methods
+ */
 
-  emit: function(type, data) {
-    if (Array.isArray(this.handlers[type]))
-      this.handlers[type].forEach(handler => handler(data))
-  },
+objectAssign(MenuStore.prototype, {
 
-  getMenus: function() {
+  getAll: function() {
+    d('#getAll')
     return this.menus
   }
 
 })
+
+/*
+ * private methods
+ */
+
+function _resetMenus(menus) {
+  d('#_resetMenus')
+  this.menus = menus
+  this.emit('reset', menus)
+}
 
 module.exports = MenuStore

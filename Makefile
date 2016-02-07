@@ -23,7 +23,7 @@ clean:
 	@rm -rf dist
 
 run-dev-server: node_modules
-	@node_modules/.bin/budo src/autocombo.js -- -s AutoCombo
+	@node_modules/.bin/budo src/autocombo.js:dist/autocombo.js -- -s AutoCombo
 
 run-api-mock-server: node_modules
 	@node_modules/.bin/json-server --watch examples/db.json
