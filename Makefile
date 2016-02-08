@@ -11,7 +11,7 @@ dist/autocombo.js: node_modules src/autocombo.js dist
 	@node_modules/.bin/browserify src/autocombo.js -s AutoCombo -o $@
 
 test: node_modules
-	@node_modules/.bin/mocha test/test.js
+	@node_modules/.bin/tape -r babel-register test/test.js
 
 lint: node_modules
 	@node_modules/.bin/eslint src/**/*.js

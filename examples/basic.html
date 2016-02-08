@@ -31,19 +31,21 @@
     <script src="../dist/autocombo.js"></script>
     <script>
 
+      var autoCombo
       $(function() {
         var countrySelectorEl = document.querySelector('#country-selector');
-        var autoCombo = new AutoCombo(countrySelectorEl);
+        autoCombo = new AutoCombo(countrySelectorEl);
 
-        $.ajax({
-          url: 'http://localhost:3000/countries'
-        }).done(function(countries) {
-          var menus =countries.map(function(country) {
-            return {value: country.id, text: country.name};
-          });
-          autoCombo.setMenus(menus);
-        });
+        //$.ajax({
+        //  url: 'http://localhost:3000/countries'
+        //}).done(function(countries) {
+        //  var menus =countries.map(function(country) {
+        //    return {value: country.id, text: country.name};
+        //  });
+        //  autoCombo.setMenus(menus);
+        //});
       });
+
 
     </script>
   </body>
