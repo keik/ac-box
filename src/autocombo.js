@@ -18,7 +18,8 @@ let objectAssign = require('object-assign')
  */
 
 let EventEmitter = require('./event-emitter'),
-    MenuStore = require('./menu-store')
+    MenuStore    = require('./menu-store'),
+    keycode      = require('./keycode')
 
 /**
  * @constructor
@@ -27,20 +28,30 @@ let EventEmitter = require('./event-emitter'),
  */
 function AutoCombo(inputEl, options) {
   d('#AutoCombo')
+
+  /*
+   * view state
+   */
+
   this.state = {
     isOpen: null,
-    value: null
+    value: null,
+    focusedIndex: null
   }
 
+  /*
+   * options
+   */
   this.options = objectAssign({
     menus: [],
     menuContainerClass: 'ac-menu-container',
     menuClass: 'ac-menu',
-    togglerClass: 'ac-toggler'
-  })
+    deleterClass: 'ac-deleter',
+    expanderClass: 'ac-expander'
+  }, options)
 
   this.dispatcher = new EventEmitter()
-  this.store = new MenuStore(this.dispatcher)
+  this.store = new MenuStore(this.dispatcher, this.options.menus)
 
   /*
    * intialize DOM elements
@@ -48,16 +59,28 @@ function AutoCombo(inputEl, options) {
 
   this.inputEl         = inputEl
   this.menuContainerEl = document.createElement('ul')
-  this.togglerEl       = document.createElement('span')
+  this.deleterEl       = document.createElement('span')
+  this.expanderEl      = document.createElement('span')
+  this.expanderIconEl  = document.createElement('span')
 
   this.menuContainerEl.className = this.options.menuContainerClass
-  this.togglerEl.className       = this.options.togglerClass
+  this.deleterEl.className       = this.options.deleterClass
+  this.deleterEl.tabIndex = -1
+  this.deleterEl.textContent = '×'
+  this.expanderEl.className       = this.options.expanderClass
+  this.expanderEl.tabIndex = -1
 
-  let computed = window.getComputedStyle(this.inputEl)
+  // style
+  let computed     = window.getComputedStyle(this.inputEl),
+      offsetTop    = this.inputEl.offsetTop,
+      offsetLeft   = this.inputEl.offsetLeft,
+      offsetWidth  = this.inputEl.offsetWidth,
+      offsetHeight = this.inputEl.offsetHeight
+
   objectAssign(this.menuContainerEl.style, {
     display: 'none',
     position: 'absolute',
-    left: this.inputEl.offsetLeft + 'px',
+    left: offsetLeft + 'px',
     padding: 0,
     margin: 0,
     width: (parseInt(computed.width) + parseInt(computed.borderLeftWidth) + parseInt(computed.borderRightWidth)) + 'px',
@@ -65,35 +88,62 @@ function AutoCombo(inputEl, options) {
     boxSizing: 'border-box'
   })
 
-  // objectAssign(this.togglerEl.style, {
-  //   display: 'inline-block',
-  //   position: 'absolute',
-  //   top: this.inputEl.offsetTop + 'px',
-  //   left: (this.inputEl.offsetLeft + this.inputEl.offsetWidth - 18) + 'px',
-  //   padding: 0,
-  //   margin: 0,
-  //   width: '18px',
-  //   height: this.inputEl.offsetHeight + 'px',
-  //   backgroundColor: 'red',
-  //   listStyle: 'none'
-  // })
+  objectAssign(this.deleterEl.style, {
+    display: 'none',
+    position: 'absolute',
+    left: (offsetLeft + offsetWidth - 18) + 'px',
+    top:  + 'px',
+    width: '18px',
+    height: offsetHeight + 'px',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    lineHeight: offsetHeight + 'px',
+    cursor: 'pointer'
+  })
 
-  this.togglerEl.textContent = 'X'
+  objectAssign(this.expanderEl.style, {
+    position: 'absolute',
+    left: (offsetLeft + offsetWidth - 18) + 'px',
+    top: offsetTop + 'px',
+    width: '18px',
+    height: offsetHeight + 'px',
+    textAlign: 'center',
+    cursor: 'pointer'
+  })
+
+  objectAssign(this.expanderIconEl.style, {
+    display: 'inline-block',
+    width: 0,
+    height: 0,
+    borderLeft: '4px solid transparent',
+    borderTop: '4px solid black',
+    borderBottom: 'none',
+    borderRight: '4px solid transparent'
+  })
+
+  // append
+  this.expanderEl.appendChild(this.expanderIconEl)
   document.body.appendChild(this.menuContainerEl)
-  document.body.appendChild(this.togglerEl)
+  document.body.appendChild(this.deleterEl)
+  document.body.appendChild(this.expanderEl)
 
   /*
    * UI event handler
    */
-  this.inputEl.addEventListener('focus',    _onInputFocus.bind(this))
-  this.inputEl.addEventListener('focusout', _onInputFocusout.bind(this))
-  this.inputEl.addEventListener('keyup',    _onInputKeyup.bind(this))
+
+  this.inputEl.addEventListener(        'focus',   _onInputFocus.bind(this))
+  this.inputEl.addEventListener(        'blur',    _onInputBlur.bind(this))
+  this.inputEl.addEventListener(        'keydown', _onInputKeydown.bind(this))
+  this.inputEl.addEventListener(        'keyup',   _onInputKeyup.bind(this))
+  this.menuContainerEl.addEventListener('click',   _onMenuContainerClick.bind(this))
+  this.deleterEl.addEventListener(      'click',   _onDeleterClick.bind(this))
+  this.expanderEl.addEventListener(     'click',   _onExpanderClick.bind(this))
 
   /*
    * Model event handler
    */
-  this.store.on('reset', _handleMenuStoreReset.bind(this))
 
+  this.store.on('reset', _handleMenuStoreReset.bind(this))
 }
 
 /*
@@ -116,33 +166,112 @@ objectAssign(AutoCombo.prototype, {
  * UI event handlers
  */
 
-function _onInputFocus() {
-  d('#_onInputFocus')
+function _onInputFocus(e) {
+  d('#_onInputFocus', e.target, e.relatedTarget, e.explicitOriginalTarget)
+  let focusFrom = e.relatedTarget || e.explicitOriginalTarget
+  if (focusFrom && focusFrom.parentNode === this.menuContainerEl) {
+    // focus from menu
+    return
+  }
+
   objectAssign(this.state, {
     isOpen: true
   })
   _render.bind(this)()
 }
 
-function _onInputFocusout() {
-  d('#_onInputFocusout')
+function _onInputBlur(e) {
+  d('#_onInputBlur', e.target, e.relatedTarget, e.explicitOriginalTarget)
+  let focusTo = e.relatedTarget || e.explicitOriginalTarget
+  if (focusTo &&
+      (focusTo.parentNode === this.menuContainerEl
+       || focusTo === this.deleterEl
+       || focusTo === this.expanderEl)) {
+
+    // if next focus is (menu|deleter|expander), nothing to do
+    return
+  }
+
   objectAssign(this.state, {
     isOpen: false
   })
   _render.bind(this)()
 }
 
+function _onInputKeydown(e) {
+  d('#_onInputKeydown')
+
+  switch (e.keyCode) {
+  case keycode.UP:
+  case keycode.DOWN:
+    // move focus on menus
+    let newFocusedIndex,
+    [sibling, child] = e.keyCode === keycode.UP ? ['previousSibling', 'lastChild'] : ['nextSibling', 'firstChild'],
+    currentFocusedEl = this.menuContainerEl.children[this.state.focusedIndex]
+    let nextFocusedEl =  currentFocusedEl && currentFocusedEl[sibling] || this.menuContainerEl[child]
+    while (nextFocusedEl && nextFocusedEl.style.display === 'none') {
+      nextFocusedEl = nextFocusedEl[sibling]
+    }
+    if (!nextFocusedEl)
+      return
+    newFocusedIndex = Array.prototype.indexOf.call(this.menuContainerEl.children, nextFocusedEl)
+    objectAssign(this.state, {
+      value: nextFocusedEl.textContent,
+      focusedIndex: newFocusedIndex
+    })
+    _render.bind(this)()
+    break
+
+  case keycode.ENTER:
+    // close menus
+    currentFocusedEl = this.menuContainerEl.children[this.state.focusedIndex]
+    objectAssign(this.state, {
+      isOpen: false
+    })
+    _render.bind(this)()
+    break
+  default:
+  }
+}
+
 function _onInputKeyup() {
   d('#_onInputKeyup')
-
   let newVal = this.inputEl.value
   if (this.state.value === newVal)
     return
 
   objectAssign(this.state, {
+    isOpen: true,
     value: newVal
   })
   _filter.bind(this)()
+  _render.bind(this)()
+}
+
+function _onMenuContainerClick(e) {
+  d('#_onMenuContainerClick', e)
+  let newVal = e.target.textContent
+  objectAssign(this.state, {
+    isOpen: false,
+    value: newVal
+  })
+  _render.bind(this)()
+}
+
+function _onDeleterClick(e) {
+  d('#_onDeleterClick')
+  objectAssign(this.state, {
+    isOpen: this.state.isOpen,
+    value: ''
+  })
+  _render.bind(this)()
+}
+
+function _onExpanderClick(e) {
+  d('#_onExpanderClick')
+  objectAssign(this.state, {
+    isOpen: !this.state.isOpen
+  })
   _render.bind(this)()
 }
 
@@ -152,7 +281,12 @@ function _onInputKeyup() {
 
 function _handleMenuStoreReset(menus) {
   d('#_handleMenuStoreReset')
-  _createMenuElements.bind(this)(this.store.getAll())
+  objectAssign(this.state, {
+    isOpen: false,
+    value: '',
+    focusedIndex: null
+  })
+  _createMenuElements.bind(this)(menus)
 }
 
 /*
@@ -172,6 +306,7 @@ function _createMenuElements(menus) {
     let menuEl = document.createElement('li')
     menuEl.textContent = menu.text
     menuEl.className = this.options.menuClass
+    menuEl.tabIndex = -1
     acc.appendChild(menuEl)
     return acc
   }, document.createDocumentFragment())
@@ -183,9 +318,8 @@ function _createMenuElements(menus) {
  */
 function _filter() {
   d('#_filter')
-
   if (!this.state.value) {
-    // show all
+    // reset filter and highlight
     Array.prototype.forEach.call(this.menuContainerEl.children, (menuEl) => {
       menuEl.textContent = menuEl.textContent
       menuEl.style.display = ''
@@ -195,7 +329,7 @@ function _filter() {
     Array.prototype.forEach.call(this.menuContainerEl.children, (menuEl) => {
       let re = new RegExp(this.state.value, 'ig')
       if (re.test(menuEl.textContent)) {
-        _highlight.bind(this)(menuEl, new RegExp(this.state.value, 'ig'), 'strong')
+        _highlight.bind(this)(menuEl, new RegExp(this.state.value, 'ig'))
         menuEl.style.display = ''
       } else {
         menuEl.style.display = 'none'
@@ -206,8 +340,14 @@ function _filter() {
 
 /**
  * emphashize mached text
+ * @param {HTMLElement} el
+ * @param {RegExp} regExp
+ *
+ * ex:
+ *   _highlight(<li>Alice</li>, /li/ig)
+ *   => <li>A<strong>li</strong>ce</li>
  */
-function _highlight(el, regExp, indicator) {
+function _highlight(el, regExp) {
   // d('#_highlight')
   // TODO perf
   let text = el.textContent,
@@ -224,10 +364,74 @@ function _highlight(el, regExp, indicator) {
 
 /**
  * render by current state
+ * @param {boolean} filter
  */
-function _render() {
-  d('#_render')
-  this.menuContainerEl.style.display = this.state.isOpen ? 'block' : 'none'
+function _render(filter) {
+  d('#_render', this.state)
+
+  // update inputed value
+  this.inputEl.value = this.state.value
+
+  if (this.state.isOpen) {
+    // show menu
+    this.menuContainerEl.style.display = 'block'
+
+    // update unfocused style
+    let lastFocusedMenuEls = this.menuContainerEl.querySelectorAll('.focused')
+    Array.prototype.forEach.call(lastFocusedMenuEls, (menuEl) => {
+      menuEl.className = menuEl.className.replace(/ focused\b/, '')
+    })
+
+    // update focused style
+    let newFocusedMenuEl = this.menuContainerEl.children[this.state.focusedIndex]
+    if (newFocusedMenuEl) {
+      newFocusedMenuEl.className = newFocusedMenuEl.className.replace(/ focused\b/, '') + ' focused'
+
+      // update menuContainer scroll position by focusing menu
+      // the operation must be ignored from any handlers so set `_stopPropagate` handler templorary
+      document.addEventListener('blur', _stopPropagate, true)
+      document.addEventListener('focus', _stopPropagate, true)
+      newFocusedMenuEl.focus()
+      this.inputEl.focus()
+      document.removeEventListener('blur', _stopPropagate, true)
+      document.removeEventListener('focus', _stopPropagate, true)
+    }
+
+    // change expander icon [^]
+    objectAssign(this.expanderIconEl.style, {
+      borderTop: 'none',
+      borderBottom: '4px solid black'
+    })
+
+  } else {
+    // hide menu
+    this.menuContainerEl.style.display = 'none'
+
+    // change expander icon [v]
+    objectAssign(this.expanderIconEl.style, {
+      borderTop: '4px solid black',
+      borderBottom: 'none'
+    })
+
+  }
+
+  // toggle deleter
+  objectAssign(this.deleterEl.style, {
+    display: this.state.value ? 'inline-block' : 'none'
+  })
+
+  // toggle expander and change icon
+  objectAssign(this.expanderEl.style, {
+    display: this.state.value ? 'none' : 'inline-block'
+  })
+}
+
+/*
+ * misc
+ */
+
+function _stopPropagate(e) {
+  e.stopPropagation()
 }
 
 module.exports = AutoCombo
