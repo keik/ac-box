@@ -94,9 +94,52 @@ test('focus input', function(t) {
           {value: 4, text: 'Elen'},
         ]})
 
-  t.equal(window.getComputedStyle($('.ac-menu-container')).display, 'none', 'when not focusing, menu should be collapsed')
+  t.equal(window.getComputedStyle($('.ac-menu-container')).display, 'none', 'in default, menu should be collapsed')
   inputEl.dispatchEvent(new window.MouseEvent('focus'))
-  t.notEqual(window.getComputedStyle($('.ac-menu-container')).display, 'none', 'when focusing, menu should be expanded')
+  t.notEqual(window.getComputedStyle($('.ac-menu-container')).display, 'none', 'focus to input, and menu should be expanded')
+
+  t.end()
+  autoCombo.destroy()
+})
+
+test('blur input', function(t) {
+  var inputEl = $('#target'),
+      autoCombo = new AutoCombo(inputEl, {
+        menus: [
+          {value: 0, text: 'Alice'},
+          {value: 1, text: 'Bob'},
+          {value: 2, text: 'Carol'},
+          {value: 3, text: 'David'},
+          {value: 4, text: 'Elen'},
+        ]})
+
+  inputEl.dispatchEvent(new window.MouseEvent('focus'))
+  t.notEqual(window.getComputedStyle($('.ac-menu-container')).display, 'none', 'focus to input, and menu should be expanded')
+
+  inputEl.dispatchEvent(new window.MouseEvent('blur'))
+  t.equal(window.getComputedStyle($('.ac-menu-container')).display, 'none', 'blur to window, and menu should be collapsed')
+
+  t.end()
+  autoCombo.destroy()
+})
+
+test('click menu', function(t) {
+  var inputEl = $('#target'),
+      autoCombo = new AutoCombo(inputEl, {
+        menus: [
+          {value: 0, text: 'Alice'},
+          {value: 1, text: 'Bob'},
+          {value: 2, text: 'Carol'},
+          {value: 3, text: 'David'},
+          {value: 4, text: 'Elen'},
+        ]})
+
+  inputEl.dispatchEvent(new window.MouseEvent('focus'))
+  t.notEqual(window.getComputedStyle($('.ac-menu-container')).display, 'none', 'focus to input, and menu should be expanded')
+
+  $$('.ac-menu')[1].dispatchEvent(new window.MouseEvent('click', {bubbles: true}))
+  t.equal(window.getComputedStyle($('.ac-menu-container')).display, 'none', 'click to menu, and menu should be collapsed')
+  t.equal(inputEl.value, 'Bob', 'click to menu "Bob", and input value should change to "Bob"')
 
   t.end()
   autoCombo.destroy()
