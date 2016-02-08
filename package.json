@@ -26,7 +26,6 @@
     "eslint": "^1.10.3",
     "jquery": "^2.2.0",
     "jsdom": "^8.0.2",
-    "json-server": "^0.8.7",
     "mocha": "^2.4.5",
     "power-assert": "^1.2.0",
     "tape": "^4.4.0",

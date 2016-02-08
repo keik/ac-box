@@ -36,9 +36,9 @@
         var autoCombo = new AutoCombo(countrySelectorEl);
 
         $.ajax({
-          url: 'http://localhost:3000/countries'
-        }).done(function(countries) {
-          var menus =countries.map(function(country) {
+          url: './db.json'
+        }).done(function(msg) {
+          var menus = msg.countries.map(function(country) {
             return {value: country.id, text: country.name};
           });
           autoCombo.setMenus(menus);

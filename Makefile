@@ -1,7 +1,7 @@
 all: clean test dist/autocombo.js dist/autocombo.min.js lint
 
 watch:
-	@make -j run-dev-server run-api-mock-server
+	@make -j run-dev-server
 
 dist/autocombo.min.js: node_modules dist/autocombo.js
 	@node_modules/.bin/uglifyjs dist/autocombo.js -cm --comments -o $@
@@ -25,10 +25,7 @@ clean:
 run-dev-server: node_modules
 	@node_modules/.bin/budo src/autocombo.js:dist/autocombo.js -- -s AutoCombo
 
-run-api-mock-server: node_modules
-	@node_modules/.bin/json-server --watch examples/db.json
-
 node_modules: package.json
 	@npm i
 
-.PHONY: all watch test lint clean run-dev-server run-api-mock-server
+.PHONY: all watch test lint clean run-dev-server
