@@ -1,14 +1,14 @@
-all: clean test dist/autocombo.js dist/autocombo.min.js lint
+all: clean test dist/ac-box.js dist/ac-box.min.js lint
 
 watch:
 	@make -j run-dev-server
 
-dist/autocombo.min.js: node_modules dist/autocombo.js
-	@node_modules/.bin/uglifyjs dist/autocombo.js -cm --comments -o $@
+dist/ac-box.min.js: node_modules dist/ac-box.js
+	@node_modules/.bin/uglifyjs dist/ac-box.js -cm --comments -o $@
 
-dist/autocombo.js: node_modules src/autocombo.js dist
-	@perl -i -pe 's/(\* \@version ).*$$/\1$(shell node -e 'console.log("v" + require("./package.json").version)')/' src/autocombo.js
-	@node_modules/.bin/browserify src/autocombo.js -s AutoCombo -o $@
+dist/ac-box.js: node_modules src/ac-box.js dist
+	@perl -i -pe 's/(\* \@version ).*$$/\1$(shell node -e 'console.log("v" + require("./package.json").version)')/' src/ac-box.js
+	@node_modules/.bin/browserify src/ac-box.js -s AcBox -o $@
 
 test: node_modules
 	@node_modules/.bin/tape -r babel-register test/test.js
@@ -23,7 +23,7 @@ clean:
 	@rm -rf dist
 
 run-dev-server: node_modules
-	@node_modules/.bin/budo src/autocombo.js:dist/autocombo.js -- -s AutoCombo
+	@node_modules/.bin/budo src/ac-box.js:dist/ac-box.js -- -s AcBox
 
 node_modules: package.json
 	@npm i

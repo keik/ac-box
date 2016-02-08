@@ -1,28 +1,28 @@
-# autocombo
+# ac-box
 
-no-dependency autocomplete + combobox library ([demo](http://keik.info/autocombo/examples/))
+no-dependency autocomplete + combobox library ([demo](http://keik.info/ac-box/examples/))
 
-![](https://github.com/keik/autocombo/raw/master/screenshot.png)
+![](https://github.com/keik/ac-box/raw/master/screenshot.png)
 
 short usage:
 
 ```js
 var inputEl = document.querySelector('input'),
-    autoCombo = new AutoCombo(inputEl)
+    acbox = new AcBox(inputEl)
 
-autoCombo.setMenus([
+acbox.setMenus([
   {text: 'Alice'},
   {text: 'Bob'},
   {text: 'Carol'}
 ])
 ```
 
-when `require` this module, babel + es2015 preset are required
+when `require` ac-box, babel + es2015 preset are required
 
 
 # API
 
-## `new AutoCombo(inputEl[, options])`
+## `new AcBox(inputEl[, options])`
 
 make specified `inputEl` to autocomplete combobox
 `inputEl` need to be `HTMLInputElement`
@@ -45,16 +45,16 @@ Class name for delete button. Default value is `ac-deleter`
 Class name for expand/collaspe button. Default value is `ac-expander`
 
 
-## `autoCombo#setMenus(menus)`
+## `AcBox#setMenus(menus)`
 
 reset menus with specified `menus`
 
 * {`array.<object>`} `menus`
 
 
-## `autoCombo#destroy()`
+## `AcBox#destroy()`
 
-destroy DOM elements and inner objects related to autocombo
+destroy DOM elements and inner objects related to ac-box
 
 
 # License

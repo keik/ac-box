@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>basic | autocombo examples</title>
+    <title>basic | ac-box examples</title>
 
     <style>
       body {
@@ -31,12 +31,12 @@
     <input id="country-selector" type="text"/>
 
     <script src="../node_modules/jquery/dist/jquery.js"></script>
-    <script src="../dist/autocombo.js"></script>
+    <script src="../dist/ac-box.js"></script>
     <script>
 
       $(function() {
         var countrySelectorEl = document.querySelector('#country-selector');
-        var autoCombo = new AutoCombo(countrySelectorEl);
+        var acbox = new AcBox(countrySelectorEl);
 
         $.ajax({
           url: './db.json'
@@ -44,7 +44,7 @@
           var menus = msg.countries.map(function(country) {
             return {value: country.id, text: country.name};
           });
-          autoCombo.setMenus(menus);
+          acbox.setMenus(menus);
         });
       });
 
