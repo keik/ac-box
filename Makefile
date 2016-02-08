@@ -1,4 +1,4 @@
-all: clean dist/autocombo.js dist/autocombo.min.js lint
+all: clean test dist/autocombo.js dist/autocombo.min.js lint
 
 watch:
 	@make -j run-dev-server run-api-mock-server
