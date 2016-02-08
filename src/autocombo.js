@@ -51,7 +51,7 @@ function AutoCombo(inputEl, options) {
   }, options)
 
   this.dispatcher = new EventEmitter()
-  this.store = new MenuStore(this.dispatcher, this.options.menus)
+  this.store = new MenuStore(this.dispatcher)
 
   /*
    * intialize DOM elements
@@ -144,6 +144,12 @@ function AutoCombo(inputEl, options) {
    */
 
   this.store.on('reset', _handleMenuStoreReset.bind(this))
+
+  /*
+   * intialize state
+   */
+
+  this.dispatcher.emit('reset', this.options.menus)
 }
 
 /*
@@ -311,20 +317,26 @@ function _createMenuElements(menus) {
   d('#_createMenuElements')
 
   // TODO perf
+  console.time('_createMenuElements', menus.length)
   let menuContainerEl = this.menuContainerEl
   while (menuContainerEl.firstChild) {
     menuContainerEl.removeChild(menuContainerEl.firstChild)
   }
-
   let fragment = menus.reduce((acc, menu) => {
     let menuEl = document.createElement('li')
-    menuEl.textContent = menu.text
+    menuEl.appendChild(document.createTextNode(menu.text))
     menuEl.className = this.options.menuClass
     menuEl.tabIndex = -1
     acc.appendChild(menuEl)
     return acc
   }, document.createDocumentFragment())
   this.menuContainerEl.appendChild(fragment)
+
+  // let html = menus.reduce((acc, menu) => {
+  //   return acc += `<li class="${ this.options.menuClass }" tabindex="-1">${ menu.text }</li>`
+  // }, '')
+  // this.menuContainerEl.innerHTML = html
+  console.timeEnd('_createMenuElements', menus.length)
 }
 
 /**
