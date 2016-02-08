@@ -1,6 +1,6 @@
 # autocombo
 
-no-dependency autocomplete + combobox library
+no-dependency autocomplete + combobox library ([demo](http://keik.info/autocombo/examples/))
 
 ![](https://github.com/keik/autocombo/raw/master/screenshot.png)
 
@@ -17,7 +17,7 @@ autoCombo.setMenus([
 ])
 ```
 
-[demo](http://keik.info/autocombo/examples/)
+when `require` this module, babel + es2015 preset are required
 
 
 # API
@@ -55,3 +55,8 @@ reset menus with specified `menus`
 ## `autoCombo#destroy()`
 
 destroy DOM elements and inner objects related to autocombo
+
+
+# License
+
+MIT (c) keik

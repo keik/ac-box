@@ -2,16 +2,16 @@
   "name": "autocombo",
   "version": "0.0.0",
   "description": "no-dependency autocomplete + combobox UI library",
-  "main": "index.js",
+  "main": "src/autocombo.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "version": "make build && git add ."
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/keik/autocombo.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "keik <k4t0.kei@gmail.com>",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/keik/autocombo/issues"
   },
