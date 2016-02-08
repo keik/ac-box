@@ -158,6 +158,20 @@ objectAssign(AutoCombo.prototype, {
   setMenus: function(menus) {
     d('#setMenus')
     this.dispatcher.emit('reset', menus)
+  },
+
+  /**
+   * destroy autocombo
+   */
+  destroy: function() {
+    d('#destroy')
+    if (this.inputEl)
+      this.inputEl.parentNode.appendChild(this.inputEl.cloneNode(true))
+    for (let k in this) {
+      if (this[k].parentNode)
+        this[k].parentNode.removeChild(this[k])
+      delete this[k]
+    }
   }
 
 })
