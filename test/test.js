@@ -82,3 +82,22 @@ test('AutoCombo#setMenus', function(t) {
   t.end()
   autoCombo.destroy()
 })
+
+test('focus input', function(t) {
+  var inputEl = $('#target'),
+      autoCombo = new AutoCombo(inputEl, {
+        menus: [
+          {value: 0, text: 'Alice'},
+          {value: 1, text: 'Bob'},
+          {value: 2, text: 'Carol'},
+          {value: 3, text: 'David'},
+          {value: 4, text: 'Elen'},
+        ]})
+
+  t.equal(window.getComputedStyle($('.ac-menu-container')).display, 'none', 'when not focusing, menu should be collapsed')
+  inputEl.dispatchEvent(new window.MouseEvent('focus'))
+  t.notEqual(window.getComputedStyle($('.ac-menu-container')).display, 'none', 'when focusing, menu should be expanded')
+
+  t.end()
+  autoCombo.destroy()
+})
