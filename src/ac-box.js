@@ -1,11 +1,11 @@
 /*
- * https://github.com/keik/autocombo
+ * https://github.com/keik/ac-box
  * @version v0.0.0
  * @author keik <k4t0.kei@gmail.com>
  * @license MIT
  */
 
-let d = require('debug')('autocombo')
+let d = require('debug')('ac-box')
 
 /*
  * load deps
@@ -26,8 +26,8 @@ let EventEmitter = require('./event-emitter'),
  * @param {HTMLInputElement} inputEl
  * @param {Object} options
  */
-function AutoCombo(inputEl, options) {
-  d('#AutoCombo')
+function AcBox(inputEl, options) {
+  d('#AcBox')
 
   /*
    * view state
@@ -156,7 +156,7 @@ function AutoCombo(inputEl, options) {
  * methods
  */
 
-objectAssign(AutoCombo.prototype, {
+objectAssign(AcBox.prototype, {
 
   /**
    * @param {Array.<Object>} menus
@@ -167,7 +167,7 @@ objectAssign(AutoCombo.prototype, {
   },
 
   /**
-   * destroy autocombo
+   * destroy ac-box
    */
   destroy: function() {
     d('#destroy')
@@ -460,4 +460,4 @@ function _stopPropagate(e) {
   e.stopPropagation()
 }
 
-module.exports = AutoCombo
+module.exports = AcBox

@@ -1,6 +1,6 @@
 var test = require('tape'),
     jsdom = require('jsdom'),
-    AutoCombo = require('../src/autocombo')
+    AcBox = require('../src/ac-box')
 
 var window = global.window = jsdom.jsdom('<input id="target" type="text"/>').defaultView,
     document = global.document = window.document
@@ -10,7 +10,7 @@ var $ = document.querySelector.bind(document),
 
 test('with default options', function(t) {
   var inputEl = $('#target'),
-      autoCombo = new AutoCombo(inputEl)
+      acbox = new AcBox(inputEl)
 
   var menuContainerEl = $('.ac-menu-container')
   t.equal(menuContainerEl.nodeName, 'UL', 'container element should be UL')
@@ -26,12 +26,12 @@ test('with default options', function(t) {
   t.equal(deleterEl.nodeName, 'SPAN', 'deleter element should be SPAN')
 
   t.end()
-  autoCombo.destroy()
+  acbox.destroy()
 })
 
 test('with custom options', function(t) {
   var inputEl = $('#target'),
-      autoCombo = new AutoCombo(inputEl, {
+      acbox = new AcBox(inputEl, {
         menus: [
           {value: 0, text: 'Alice'},
           {value: 1, text: 'Bob'},
@@ -59,12 +59,12 @@ test('with custom options', function(t) {
   t.equal(deleterEl.nodeName, 'SPAN', 'deleter element should be SPAN')
 
   t.end()
-  autoCombo.destroy()
+  acbox.destroy()
 })
 
-test('AutoCombo#setMenus', function(t) {
+test('AcBox#setMenus', function(t) {
   var inputEl = $('#target'),
-      autoCombo = new AutoCombo(inputEl, {
+      acbox = new AcBox(inputEl, {
         menus: [
           {value: 0, text: 'Alice'},
           {value: 1, text: 'Bob'},
@@ -74,18 +74,18 @@ test('AutoCombo#setMenus', function(t) {
         ]})
   t.equal($$('.ac-menu').length, 5, '5 menu element should exist')
 
-  autoCombo.setMenus([
+  acbox.setMenus([
     {value: 1, text: 'Alice'}
   ])
   t.equal($$('.ac-menu').length, 1, '1 menu element should exist')
 
   t.end()
-  autoCombo.destroy()
+  acbox.destroy()
 })
 
 test('focus input', function(t) {
   var inputEl = $('#target'),
-      autoCombo = new AutoCombo(inputEl, {
+      acbox = new AcBox(inputEl, {
         menus: [
           {value: 0, text: 'Alice'},
           {value: 1, text: 'Bob'},
@@ -99,12 +99,12 @@ test('focus input', function(t) {
   t.notEqual(window.getComputedStyle($('.ac-menu-container')).display, 'none', 'focus to input, and menu should be expanded')
 
   t.end()
-  autoCombo.destroy()
+  acbox.destroy()
 })
 
 test('blur input', function(t) {
   var inputEl = $('#target'),
-      autoCombo = new AutoCombo(inputEl, {
+      acbox = new AcBox(inputEl, {
         menus: [
           {value: 0, text: 'Alice'},
           {value: 1, text: 'Bob'},
@@ -120,12 +120,12 @@ test('blur input', function(t) {
   t.equal(window.getComputedStyle($('.ac-menu-container')).display, 'none', 'blur to window, and menu should be collapsed')
 
   t.end()
-  autoCombo.destroy()
+  acbox.destroy()
 })
 
 test('click menu', function(t) {
   var inputEl = $('#target'),
-      autoCombo = new AutoCombo(inputEl, {
+      acbox = new AcBox(inputEl, {
         menus: [
           {value: 0, text: 'Alice'},
           {value: 1, text: 'Bob'},
@@ -142,12 +142,12 @@ test('click menu', function(t) {
   t.equal(inputEl.value, 'Bob', 'click to menu "Bob", and input value should change to "Bob"')
 
   t.end()
-  autoCombo.destroy()
+  acbox.destroy()
 })
 
 test('input chars and filter', function(t) {
   var inputEl = $('#target'),
-      autoCombo = new AutoCombo(inputEl, {
+      acbox = new AcBox(inputEl, {
         menus: [
           {value: 0, text: 'Alice'},
           {value: 1, text: 'Bob'},
@@ -174,5 +174,5 @@ test('input chars and filter', function(t) {
   t.equal(window.getComputedStyle($$('.ac-menu')[4]).display, 'none', 'Elen should not be shown')
 
   t.end()
-  autoCombo.destroy()
+  acbox.destroy()
 })
