@@ -144,3 +144,35 @@ test('click menu', function(t) {
   t.end()
   autoCombo.destroy()
 })
+
+test('input chars and filter', function(t) {
+  var inputEl = $('#target'),
+      autoCombo = new AutoCombo(inputEl, {
+        menus: [
+          {value: 0, text: 'Alice'},
+          {value: 1, text: 'Bob'},
+          {value: 2, text: 'Carol'},
+          {value: 3, text: 'David'},
+          {value: 4, text: 'Elen'},
+        ]})
+
+  inputEl.dispatchEvent(new window.MouseEvent('focus'))
+  t.notEqual(window.getComputedStyle($('.ac-menu-container')).display, 'none', 'focus to input, and menu should be expanded')
+
+  inputEl.value = 'a'
+  inputEl.dispatchEvent(new window.KeyboardEvent('keyup'))
+  t.notEqual(window.getComputedStyle($('.ac-menu-container')).display, 'none', 'focus to input, and menu should be expanded')
+  t.equal($$('.ac-menu')[0].innerHTML, '<strong>A</strong>lice', 'Alice should be emphasized')
+  t.equal($$('.ac-menu')[1].innerHTML, 'Bob', 'Bob should not be emphasized')
+  t.equal($$('.ac-menu')[2].innerHTML, 'C<strong>a</strong>rol', 'Carol should be emphasized')
+  t.equal($$('.ac-menu')[3].innerHTML, 'D<strong>a</strong>vid', 'David should be emphasized')
+  t.equal($$('.ac-menu')[4].innerHTML, 'Elen', 'Elen should not be emphasized')
+  t.notEqual(window.getComputedStyle($$('.ac-menu')[0]).display, 'none', 'Alice should be shown')
+  t.equal(window.getComputedStyle($$('.ac-menu')[1]).display, 'none', 'Bob should not be shown')
+  t.notEqual(window.getComputedStyle($$('.ac-menu')[2]).display, 'none', 'Carol should be shown')
+  t.notEqual(window.getComputedStyle($$('.ac-menu')[3]).display, 'none', 'David should be shown')
+  t.equal(window.getComputedStyle($$('.ac-menu')[4]).display, 'none', 'Elen should not be shown')
+
+  t.end()
+  autoCombo.destroy()
+})

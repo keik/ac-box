@@ -254,7 +254,7 @@ function _onInputKeydown(e) {
   }
 }
 
-function _onInputKeyup() {
+function _onInputKeyup(e) {
   d('#_onInputKeyup')
   let newVal = this.inputEl.value
   if (this.state.value === newVal)
