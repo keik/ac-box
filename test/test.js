@@ -140,6 +140,10 @@ test('click menu', function(t) {
   $$('.ac-menu')[1].dispatchEvent(new window.MouseEvent('click', {bubbles: true}))
   t.equal(window.getComputedStyle($('.ac-menu-container')).display, 'none', 'click to menu, and menu should be collapsed')
   t.equal(inputEl.value, 'Bob', 'click to menu "Bob", and input value should change to "Bob"')
+  t.equal(document.activeElement, document.body, 'body should be focused')
+
+  inputEl.dispatchEvent(new window.MouseEvent('focus'))
+  t.equal(Array.prototype.filter.call($$('.ac-menu'), (menuEl) => menuEl.style.display !== 'none').length, 1, 'visible menus length should be 1')
 
   t.end()
   acbox.destroy()

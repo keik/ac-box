@@ -276,6 +276,7 @@ function _onMenuContainerClick(e) {
     isOpen: false,
     value: newVal
   })
+  _filter.bind(this)()
   _render.bind(this)()
 }
 
