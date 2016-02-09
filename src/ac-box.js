@@ -61,7 +61,7 @@ function AcBox(inputEl, options) {
   this.menuContainerEl = document.createElement('ul')
   this.deleterEl       = document.createElement('span')
   this.expanderEl      = document.createElement('span')
-  this.expanderIconEl  = document.createElement('span')
+  this.expanderIconEl  = document.createElement('div')
 
   this.menuContainerEl.className = this.options.menuContainerClass
   this.deleterEl.className       = this.options.deleterClass
@@ -81,9 +81,12 @@ function AcBox(inputEl, options) {
     display: 'none',
     position: 'absolute',
     left: offsetLeft + 'px',
+    top: offsetTop + offsetHeight + 'px',
     padding: 0,
     margin: 0,
     width: (parseInt(computed.width) + parseInt(computed.borderLeftWidth) + parseInt(computed.borderRightWidth)) + 'px',
+    maxHeight: (window.innerHeight - offsetTop - offsetHeight - 12) + 'px',
+    overflow: 'auto',
     listStyle: 'none',
     boxSizing: 'border-box'
   })
@@ -92,8 +95,8 @@ function AcBox(inputEl, options) {
     display: 'none',
     position: 'absolute',
     left: (offsetLeft + offsetWidth - 18) + 'px',
-    top:  + 'px',
-    width: '18px',
+    top: offsetTop + 'px',
+    width: '16px',
     height: offsetHeight + 'px',
     fontWeight: 'bold',
     textAlign: 'center',
@@ -105,16 +108,17 @@ function AcBox(inputEl, options) {
     position: 'absolute',
     left: (offsetLeft + offsetWidth - 18) + 'px',
     top: offsetTop + 'px',
-    width: '18px',
+    width: '16px',
     height: offsetHeight + 'px',
     textAlign: 'center',
     cursor: 'pointer'
   })
 
   objectAssign(this.expanderIconEl.style, {
-    display: 'inline-block',
+    display: 'block',
     width: 0,
     height: 0,
+    margin: `${ (offsetHeight - 4) / 2 }px 4px 0 4px`,
     borderLeft: '4px solid transparent',
     borderTop: '4px solid black',
     borderBottom: 'none',
@@ -130,7 +134,9 @@ function AcBox(inputEl, options) {
   /*
    * UI event handler
    */
-
+  this.handlers = {}
+  this.handlers['onWindowResize'] = _onWindowResize.bind(this)
+  window.addEventListener(              'resize',  this.handlers['onWindowResize'])
   this.inputEl.addEventListener(        'focus',   _onInputFocus.bind(this))
   this.inputEl.addEventListener(        'blur',    _onInputBlur.bind(this))
   this.inputEl.addEventListener(        'keydown', _onInputKeydown.bind(this))
@@ -173,6 +179,10 @@ objectAssign(AcBox.prototype, {
     d('#destroy')
     if (this.inputEl)
       this.inputEl.parentNode.appendChild(this.inputEl.cloneNode(true))
+
+    if (this.handlers)
+      window.removeEventListener('resize', this.handlers['onWindowResize'])
+
     for (let k in this) {
       if (this[k].parentNode)
         this[k].parentNode.removeChild(this[k])
@@ -185,6 +195,33 @@ objectAssign(AcBox.prototype, {
 /*
  * UI event handlers
  */
+
+function _onWindowResize(e) {
+  d('#_onWindowResize')
+  let computed     = window.getComputedStyle(this.inputEl),
+      offsetTop    = this.inputEl.offsetTop,
+      offsetLeft   = this.inputEl.offsetLeft,
+      offsetWidth  = this.inputEl.offsetWidth,
+      offsetHeight = this.inputEl.offsetHeight
+
+  objectAssign(this.menuContainerEl.style, {
+    left: offsetLeft + 'px',
+    top: offsetTop + offsetHeight + 'px',
+    width: (parseInt(computed.width) + parseInt(computed.borderLeftWidth) + parseInt(computed.borderRightWidth)) + 'px'
+  })
+
+  objectAssign(this.deleterEl.style, {
+    left: (offsetLeft + offsetWidth - 18) + 'px',
+    top: offsetTop + 'px',
+    height: offsetHeight + 'px'
+  })
+
+  objectAssign(this.expanderEl.style, {
+    left: (offsetLeft + offsetWidth - 18) + 'px',
+    top: offsetTop + 'px',
+    height: offsetHeight + 'px'
+  })
+}
 
 function _onInputFocus(e) {
   d('#_onInputFocus', e.target, e.relatedTarget, e.explicitOriginalTarget)
@@ -275,6 +312,7 @@ function _onMenuContainerClick(e) {
     isOpen: false,
     value: newVal
   })
+  _filter.bind(this)()
   _render.bind(this)()
 }
 
@@ -284,6 +322,8 @@ function _onDeleterClick(e) {
     isOpen: this.state.isOpen,
     value: ''
   })
+  this.inputEl.focus()
+  _filter.bind(this)()
   _render.bind(this)()
 }
 
@@ -401,6 +441,8 @@ function _render(filter) {
   if (this.state.isOpen) {
     // show menu
     this.menuContainerEl.style.display = 'block'
+    this.menuContainerEl.style.maxHeight = (window.innerHeight - this.menuContainerEl.offsetTop - 12) + 'px'
+    document.body.style.overflow = 'hidden'
 
     // update unfocused style
     let lastFocusedMenuEls = this.menuContainerEl.querySelectorAll('.focused')
@@ -432,6 +474,7 @@ function _render(filter) {
   } else {
     // hide menu
     this.menuContainerEl.style.display = 'none'
+    document.body.style.overflow = ''
 
     // change expander icon [v]
     objectAssign(this.expanderIconEl.style, {
@@ -443,12 +486,12 @@ function _render(filter) {
 
   // toggle deleter
   objectAssign(this.deleterEl.style, {
-    display: this.state.value ? 'inline-block' : 'none'
+    display: this.state.value ? '' : 'none'
   })
 
   // toggle expander and change icon
   objectAssign(this.expanderEl.style, {
-    display: this.state.value ? 'none' : 'inline-block'
+    display: this.state.value ? 'none' : ''
   })
 }
 

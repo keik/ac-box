@@ -140,6 +140,10 @@ test('click menu', function(t) {
   $$('.ac-menu')[1].dispatchEvent(new window.MouseEvent('click', {bubbles: true}))
   t.equal(window.getComputedStyle($('.ac-menu-container')).display, 'none', 'click to menu, and menu should be collapsed')
   t.equal(inputEl.value, 'Bob', 'click to menu "Bob", and input value should change to "Bob"')
+  t.equal(document.activeElement, document.body, 'body should be focused')
+
+  inputEl.dispatchEvent(new window.MouseEvent('focus'))
+  t.equal(Array.prototype.filter.call($$('.ac-menu'), (menuEl) => menuEl.style.display !== 'none').length, 1, 'visible menus length should be 1')
 
   t.end()
   acbox.destroy()
@@ -172,6 +176,31 @@ test('input chars and filter', function(t) {
   t.notEqual(window.getComputedStyle($$('.ac-menu')[2]).display, 'none', 'Carol should be shown')
   t.notEqual(window.getComputedStyle($$('.ac-menu')[3]).display, 'none', 'David should be shown')
   t.equal(window.getComputedStyle($$('.ac-menu')[4]).display, 'none', 'Elen should not be shown')
+
+  t.end()
+  acbox.destroy()
+})
+
+test('click deleter', function(t) {
+  var inputEl = $('#target'),
+      acbox = new AcBox(inputEl, {
+        menus: [
+          {value: 0, text: 'Alice'},
+          {value: 1, text: 'Bob'},
+          {value: 2, text: 'Carol'},
+          {value: 3, text: 'David'},
+          {value: 4, text: 'Elen'},
+        ]})
+
+  inputEl.dispatchEvent(new window.MouseEvent('focus'))
+  inputEl.value = 'a'
+  inputEl.dispatchEvent(new window.KeyboardEvent('keyup'))
+
+  t.equal(Array.prototype.filter.call($$('.ac-menu'), (menuEl) => menuEl.style.display !== 'none').length, 3, 'visible menus length should be 3')
+
+  $('.ac-deleter').dispatchEvent(new window.MouseEvent('click'))
+  t.equal(Array.prototype.filter.call($$('.ac-menu'), (menuEl) => menuEl.style.display !== 'none').length, 5, 'visible menus length should be 5')
+  t.equal(document.activeElement, inputEl, 'input element should be focused')
 
   t.end()
   acbox.destroy()
