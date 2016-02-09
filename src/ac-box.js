@@ -285,6 +285,8 @@ function _onDeleterClick(e) {
     isOpen: this.state.isOpen,
     value: ''
   })
+  this.inputEl.focus()
+  _filter.bind(this)()
   _render.bind(this)()
 }
 

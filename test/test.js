@@ -176,3 +176,28 @@ test('input chars and filter', function(t) {
   t.end()
   acbox.destroy()
 })
+
+test('click deleter', function(t) {
+  var inputEl = $('#target'),
+      acbox = new AcBox(inputEl, {
+        menus: [
+          {value: 0, text: 'Alice'},
+          {value: 1, text: 'Bob'},
+          {value: 2, text: 'Carol'},
+          {value: 3, text: 'David'},
+          {value: 4, text: 'Elen'},
+        ]})
+
+  inputEl.dispatchEvent(new window.MouseEvent('focus'))
+  inputEl.value = 'a'
+  inputEl.dispatchEvent(new window.KeyboardEvent('keyup'))
+
+  t.equal(Array.prototype.filter.call($$('.ac-menu'), (menuEl) => menuEl.style.display !== 'none').length, 3, 'visible menus length should be 3')
+
+  $('.ac-deleter').dispatchEvent(new window.MouseEvent('click'))
+  t.equal(Array.prototype.filter.call($$('.ac-menu'), (menuEl) => menuEl.style.display !== 'none').length, 5, 'visible menus length should be 5')
+  t.equal(document.activeElement, inputEl, 'input element should be focused')
+
+  t.end()
+  acbox.destroy()
+})
