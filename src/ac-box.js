@@ -61,7 +61,7 @@ function AcBox(inputEl, options) {
   this.menuContainerEl = document.createElement('ul')
   this.deleterEl       = document.createElement('span')
   this.expanderEl      = document.createElement('span')
-  this.expanderIconEl  = document.createElement('span')
+  this.expanderIconEl  = document.createElement('div')
 
   this.menuContainerEl.className = this.options.menuContainerClass
   this.deleterEl.className       = this.options.deleterClass
@@ -92,8 +92,8 @@ function AcBox(inputEl, options) {
     display: 'none',
     position: 'absolute',
     left: (offsetLeft + offsetWidth - 18) + 'px',
-    top:  + 'px',
-    width: '18px',
+    top: offsetTop + 'px',
+    width: '16px',
     height: offsetHeight + 'px',
     fontWeight: 'bold',
     textAlign: 'center',
@@ -105,16 +105,17 @@ function AcBox(inputEl, options) {
     position: 'absolute',
     left: (offsetLeft + offsetWidth - 18) + 'px',
     top: offsetTop + 'px',
-    width: '18px',
+    width: '16px',
     height: offsetHeight + 'px',
     textAlign: 'center',
     cursor: 'pointer'
   })
 
   objectAssign(this.expanderIconEl.style, {
-    display: 'inline-block',
+    display: 'block',
     width: 0,
     height: 0,
+    margin: `${ (offsetHeight - 4) / 2 }px 4px 0 4px`,
     borderLeft: '4px solid transparent',
     borderTop: '4px solid black',
     borderBottom: 'none',
@@ -443,12 +444,12 @@ function _render(filter) {
 
   // toggle deleter
   objectAssign(this.deleterEl.style, {
-    display: this.state.value ? 'inline-block' : 'none'
+    display: this.state.value ? '' : 'none'
   })
 
   // toggle expander and change icon
   objectAssign(this.expanderEl.style, {
-    display: this.state.value ? 'none' : 'inline-block'
+    display: this.state.value ? 'none' : ''
   })
 }
 
