@@ -20,6 +20,14 @@ acbox.setMenus([
 when `require` ac-box, babel + es2015 preset are required
 
 
+# Styling
+
+position related properties will be configured automatically
+
+on the other hand, decoration related properties such like `border` or `background-color` will not be configured,
+so you have to configure CSS for menu container element or menu elements, etc. see [source of demo](https://github.com/keik/ac-box/blob/master/examples/basic.html)
+
+
 # API
 
 ## `new AcBox(inputEl[, options])`
@@ -36,7 +44,7 @@ Menus for suggestions. Default value is `[]`. A menu object need `text` property
 Class name for menus container element. Default value is `ac-menu-container`.
 
 * {`string`} `menuClass` -
-Class name for each menu element. Default value is `ac-menu-container`.
+Class name for each menu element. Default value is `ac-menu`.
 
 * {`string`} `deleterClass` -
 Class name for delete button. Default value is `ac-deleter`
