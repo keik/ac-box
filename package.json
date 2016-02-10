@@ -1,10 +1,10 @@
 {
   "name": "ac-box",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "no-dependency autocomplete + combobox UI library",
   "main": "src/ac-box.js",
   "scripts": {
-    "version": "make build && git add ."
+    "version": "make all && git add . && git add -f dist"
   },
   "repository": {
     "type": "git",
@@ -30,7 +30,8 @@
     "mocha": "^2.4.5",
     "power-assert": "^1.2.0",
     "tape": "^4.4.0",
-    "uglify-js": "^2.6.1"
+    "uglify-js": "^2.6.1",
+    "undebuggify": "^0.1.0"
   },
   "browserify": {
     "transform": [

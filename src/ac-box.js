@@ -1,6 +1,6 @@
 /*
  * https://github.com/keik/ac-box
- * @version v0.0.0
+ * @version v0.1.0
  * @author keik <k4t0.kei@gmail.com>
  * @license MIT
  */
@@ -357,7 +357,6 @@ function _createMenuElements(menus) {
   d('#_createMenuElements')
 
   // TODO perf
-  console.time('_createMenuElements', menus.length)
   let menuContainerEl = this.menuContainerEl
   while (menuContainerEl.firstChild) {
     menuContainerEl.removeChild(menuContainerEl.firstChild)
@@ -376,7 +375,6 @@ function _createMenuElements(menus) {
   //   return acc += `<li class="${ this.options.menuClass }" tabindex="-1">${ menu.text }</li>`
   // }, '')
   // this.menuContainerEl.innerHTML = html
-  console.timeEnd('_createMenuElements', menus.length)
 }
 
 /**

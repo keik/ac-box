@@ -8,7 +8,7 @@ dist/ac-box.min.js: node_modules dist/ac-box.js
 
 dist/ac-box.js: node_modules src/ac-box.js dist
 	@perl -i -pe 's/(\* \@version ).*$$/\1$(shell node -e 'console.log("v" + require("./package.json").version)')/' src/ac-box.js
-	@node_modules/.bin/browserify src/ac-box.js -s AcBox -o $@
+	@node_modules/.bin/browserify -t undebuggify src/ac-box.js -s AcBox -o $@
 
 test: node_modules
 	@node_modules/.bin/tape -r babel-register test/test.js
