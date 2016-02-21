@@ -1,11 +1,11 @@
 /*
  * https://github.com/keik/ac-box
- * @version v0.1.0
+ * @version v0.1.1
  * @author keik <k4t0.kei@gmail.com>
  * @license MIT
  */
 
-let d = require('debug')('ac-box')
+let d = require('debug')('ac-box:ac-box')
 
 /*
  * load deps

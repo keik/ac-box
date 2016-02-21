@@ -44,16 +44,39 @@ module.exports = Object.assign || function (target, source) {
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
+/*
+ * https://github.com/keik/ac-box
+ * @version v0.1.1
+ * @author keik <k4t0.kei@gmail.com>
+ * @license MIT
+ */
+/*
+ * load deps
+ */
 var objectAssign = require('object-assign');
+/*
+ * load modules
+ */
 var EventEmitter = require('./event-emitter'),
     MenuStore = require('./menu-store'),
     keycode = require('./keycode');
+/**
+ * @constructor
+ * @param {HTMLInputElement} inputEl
+ * @param {Object} options
+ */
 function AcBox(inputEl, options) {
+    /*
+    * view state
+    */
     this.state = {
         isOpen: null,
         value: null,
         focusedIndex: null
     };
+    /*
+    * options
+    */
     this.options = objectAssign({
         menus: [],
         menuContainerClass: 'ac-menu-container',
@@ -63,6 +86,9 @@ function AcBox(inputEl, options) {
     }, options);
     this.dispatcher = new EventEmitter();
     this.store = new MenuStore(this.dispatcher);
+    /*
+    * intialize DOM elements
+    */
     this.inputEl = inputEl;
     this.menuContainerEl = document.createElement('ul');
     this.deleterEl = document.createElement('span');
@@ -74,6 +100,7 @@ function AcBox(inputEl, options) {
     this.deleterEl.textContent = '\xD7';
     this.expanderEl.className = this.options.expanderClass;
     this.expanderEl.tabIndex = -1;
+    // style
     var computed = window.getComputedStyle(this.inputEl),
         offsetTop = this.inputEl.offsetTop,
         offsetLeft = this.inputEl.offsetLeft,
@@ -123,10 +150,14 @@ function AcBox(inputEl, options) {
         borderBottom: 'none',
         borderRight: '4px solid transparent'
     });
+    // append
     this.expanderEl.appendChild(this.expanderIconEl);
     document.body.appendChild(this.menuContainerEl);
     document.body.appendChild(this.deleterEl);
     document.body.appendChild(this.expanderEl);
+    /*
+    * UI event handler
+    */
     this.handlers = {};
     this.handlers['onWindowResize'] = _onWindowResize.bind(this);
     window.addEventListener('resize', this.handlers['onWindowResize']);
@@ -137,13 +168,28 @@ function AcBox(inputEl, options) {
     this.menuContainerEl.addEventListener('click', _onMenuContainerClick.bind(this));
     this.deleterEl.addEventListener('click', _onDeleterClick.bind(this));
     this.expanderEl.addEventListener('click', _onExpanderClick.bind(this));
+    /*
+    * Model event handler
+    */
     this.store.on('reset', _handleMenuStoreReset.bind(this));
+    /*
+    * intialize state
+    */
     this.dispatcher.emit('reset', this.options.menus);
 }
+/*
+ * methods
+ */
 objectAssign(AcBox.prototype, {
+    /**
+    * @param {Array.<Object>} menus
+    */
     setMenus: function setMenus(menus) {
         this.dispatcher.emit('reset', menus);
     },
+    /**
+    * destroy ac-box
+    */
     destroy: function destroy() {
         if (this.inputEl) this.inputEl.parentNode.appendChild(this.inputEl.cloneNode(true));
         if (this.handlers) window.removeEventListener('resize', this.handlers['onWindowResize']);
@@ -153,6 +199,9 @@ objectAssign(AcBox.prototype, {
         }
     }
 });
+/*
+ * UI event handlers
+ */
 function _onWindowResize(e) {
     var computed = window.getComputedStyle(this.inputEl),
         offsetTop = this.inputEl.offsetTop,
@@ -178,6 +227,7 @@ function _onWindowResize(e) {
 function _onInputFocus(e) {
     var focusFrom = e.relatedTarget || e.explicitOriginalTarget;
     if (focusFrom && focusFrom.parentNode === this.menuContainerEl) {
+        // focus from menu
         return;
     }
     objectAssign(this.state, { isOpen: true });
@@ -186,6 +236,7 @@ function _onInputFocus(e) {
 function _onInputBlur(e) {
     var focusTo = e.relatedTarget || e.explicitOriginalTarget;
     if (focusTo && (focusTo.parentNode === this.menuContainerEl || focusTo === this.deleterEl || focusTo === this.expanderEl)) {
+        // if next focus is (menu|deleter|expander), nothing to do
         return;
     }
     objectAssign(this.state, { isOpen: false });
@@ -195,6 +246,7 @@ function _onInputKeydown(e) {
     switch (e.keyCode) {
         case keycode.UP:
         case keycode.DOWN:
+            // move focus on menus
             var newFocusedIndex = undefined;
             var _ref = e.keyCode === keycode.UP ? ['previousSibling', 'lastChild'] : ['nextSibling', 'firstChild'];
 
@@ -215,6 +267,7 @@ function _onInputKeydown(e) {
             _render.bind(this)();
             break;
         case keycode.ENTER:
+            // close menus
             currentFocusedEl = this.menuContainerEl.children[this.state.focusedIndex];
             objectAssign(this.state, { isOpen: false });
             _render.bind(this)();
@@ -254,6 +307,9 @@ function _onExpanderClick(e) {
     objectAssign(this.state, { isOpen: !this.state.isOpen });
     _render.bind(this)();
 }
+/*
+ * store event handlers
+ */
 function _handleMenuStoreReset(menus) {
     objectAssign(this.state, {
         isOpen: false,
@@ -262,9 +318,13 @@ function _handleMenuStoreReset(menus) {
     });
     _createMenuElements.bind(this)(menus);
 }
+/*
+ * view functions
+ */
 function _createMenuElements(menus) {
     var _this = this;
 
+    // TODO perf
     var menuContainerEl = this.menuContainerEl;
     while (menuContainerEl.firstChild) {
         menuContainerEl.removeChild(menuContainerEl.firstChild);
@@ -277,17 +337,26 @@ function _createMenuElements(menus) {
         acc.appendChild(menuEl);
         return acc;
     }, document.createDocumentFragment());
-    this.menuContainerEl.appendChild(fragment);
+    this.menuContainerEl.appendChild(fragment) // let html = menus.reduce((acc, menu) => {
+    //   return acc += `<li class="${ this.options.menuClass }" tabindex="-1">${ menu.text }</li>`
+    // }, '')
+    // this.menuContainerEl.innerHTML = html
+    ;
 }
+/**
+ * filter unmatched menu
+ */
 function _filter() {
     var _this2 = this;
 
     if (!this.state.value) {
+        // reset filter and highlight
         Array.prototype.forEach.call(this.menuContainerEl.children, function (menuEl) {
             menuEl.textContent = menuEl.textContent;
             menuEl.style.display = '';
         });
     } else {
+        // filter and highlight
         Array.prototype.forEach.call(this.menuContainerEl.children, function (menuEl) {
             var re = new RegExp(_this2.state.value, 'ig');
             if (re.test(menuEl.textContent)) {
@@ -299,7 +368,18 @@ function _filter() {
         });
     }
 }
+/**
+ * emphashize mached text
+ * @param {HTMLElement} el
+ * @param {RegExp} regExp
+ *
+ * ex:
+ *   _highlight(<li>Alice</li>, /li/ig)
+ *   => <li>A<strong>li</strong>ce</li>
+ */
 function _highlight(el, regExp) {
+    // d('#_highlight')
+    // TODO perf
     var text = el.textContent,
         m = undefined,
         lastlast = undefined,
@@ -311,19 +391,29 @@ function _highlight(el, regExp) {
     html += text.substring(lastlast);
     el.innerHTML = html;
 }
+/**
+ * render by current state
+ * @param {boolean} filter
+ */
 function _render(filter) {
+    // update inputed value
     this.inputEl.value = this.state.value;
     if (this.state.isOpen) {
+        // show menu
         this.menuContainerEl.style.display = 'block';
         this.menuContainerEl.style.maxHeight = window.innerHeight - this.menuContainerEl.offsetTop - 12 + 'px';
         document.body.style.overflow = 'hidden';
+        // update unfocused style
         var lastFocusedMenuEls = this.menuContainerEl.querySelectorAll('.focused');
         Array.prototype.forEach.call(lastFocusedMenuEls, function (menuEl) {
             menuEl.className = menuEl.className.replace(/ focused\b/, '');
         });
+        // update focused style
         var newFocusedMenuEl = this.menuContainerEl.children[this.state.focusedIndex];
         if (newFocusedMenuEl) {
             newFocusedMenuEl.className = newFocusedMenuEl.className.replace(/ focused\b/, '') + ' focused';
+            // update menuContainer scroll position by focusing menu
+            // the operation must be ignored from any handlers so set `_stopPropagate` handler templorary
             document.addEventListener('blur', _stopPropagate, true);
             document.addEventListener('focus', _stopPropagate, true);
             newFocusedMenuEl.focus();
@@ -331,21 +421,29 @@ function _render(filter) {
             document.removeEventListener('blur', _stopPropagate, true);
             document.removeEventListener('focus', _stopPropagate, true);
         }
+        // change expander icon [^]
         objectAssign(this.expanderIconEl.style, {
             borderTop: 'none',
             borderBottom: '4px solid black'
         });
     } else {
+        // hide menu
         this.menuContainerEl.style.display = 'none';
         document.body.style.overflow = '';
+        // change expander icon [v]
         objectAssign(this.expanderIconEl.style, {
             borderTop: '4px solid black',
             borderBottom: 'none'
         });
     }
+    // toggle deleter
     objectAssign(this.deleterEl.style, { display: this.state.value ? '' : 'none' });
+    // toggle expander and change icon
     objectAssign(this.expanderEl.style, { display: this.state.value ? 'none' : '' });
 }
+/*
+ * misc
+ */
 function _stopPropagate(e) {
     e.stopPropagation();
 }
@@ -354,6 +452,9 @@ module.exports = AcBox;
 },{"./event-emitter":3,"./keycode":4,"./menu-store":5,"object-assign":1}],3:[function(require,module,exports){
 'use strict';
 
+/*
+ * load deps
+ */
 var objectAssign = require('object-assign');
 function EventEmitter() {
     this.handlers = {};
@@ -387,23 +488,41 @@ module.exports = {
 },{}],5:[function(require,module,exports){
 'use strict';
 
+/*
+ * load deps
+ */
 var objectAssign = require('object-assign');
+/*
+ * load modules
+ */
 var EventEmitter = require('./event-emitter');
+/**
+ * @coustructor
+ * @param {EventEmitter} dippatcher
+ * @param {Array.<Object>} menus
+ */
 function MenuStore(dispatcher, menus) {
-    EventEmitter.call(this);
-    this.dispatcher = dispatcher;
-    this.menus = menus;
-    this.dispatcher.on('reset', _resetMenus.bind(this));
+  EventEmitter.call(this);
+  this.dispatcher = dispatcher;
+  this.menus = menus;
+  this.dispatcher.on('reset', _resetMenus.bind(this));
 }
+// extend
 objectAssign(MenuStore.prototype, EventEmitter.prototype);
+/*
+ * methods
+ */
 objectAssign(MenuStore.prototype, {
-    getAll: function getAll() {
-        return this.menus;
-    }
+  getAll: function getAll() {
+    return this.menus;
+  }
 });
+/*
+ * private methods
+ */
 function _resetMenus(menus) {
-    this.menus = menus;
-    this.emit('reset', menus);
+  this.menus = menus;
+  this.emit('reset', menus);
 }
 module.exports = MenuStore;
 
