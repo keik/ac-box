@@ -1,4 +1,4 @@
-let d = require('debug')('menu-store')
+let d = require('debug')('ac-box:menu-store')
 
 /*
  * load deps

@@ -1,4 +1,4 @@
-let d = require('debug')('dispatcher')
+let d = require('debug')('ac-box:event-emitter')
 
 /*
  * load deps

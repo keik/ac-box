@@ -16,6 +16,13 @@
     "url": "https://github.com/keik/ac-box/issues"
   },
   "homepage": "https://github.com/keik/ac-box#readme",
+  "keywords": [
+    "autocomplete",
+    "combobox"
+  ],
+  "dependencies": {
+    "object-assign": "^4.0.1"
+  },
   "devDependencies": {
     "babel-preset-es2015": "^6.3.13",
     "babel-register": "^6.5.1",
@@ -42,8 +49,5 @@
     "presets": [
       "es2015"
     ]
-  },
-  "dependencies": {
-    "object-assign": "^4.0.1"
   }
 }

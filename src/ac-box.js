@@ -5,7 +5,7 @@
  * @license MIT
  */
 
-let d = require('debug')('ac-box')
+let d = require('debug')('ac-box:ac-box')
 
 /*
  * load deps
