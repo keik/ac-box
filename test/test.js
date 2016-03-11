@@ -33,11 +33,11 @@ test('with custom options', function(t) {
   var inputEl = $('#target'),
       acbox = new AcBox(inputEl, {
         menus: [
-          {value: 0, text: 'Alice'},
-          {value: 1, text: 'Bob'},
-          {value: 2, text: 'Carol'},
-          {value: 3, text: 'David'},
-          {value: 4, text: 'Elen'},
+          'Alice',
+          'Bob',
+          'Carol',
+          'David',
+          'Elen',
         ],
         menuContainerClass: 'x-menu-container',
         menuClass: 'x-menu',
@@ -66,12 +66,14 @@ test('AcBox#setMenus', function(t) {
   var inputEl = $('#target'),
       acbox = new AcBox(inputEl, {
         menus: [
-          {value: 0, text: 'Alice'},
-          {value: 1, text: 'Bob'},
-          {value: 2, text: 'Carol'},
-          {value: 3, text: 'David'},
-          {value: 4, text: 'Elen'},
-        ]})
+          'Alice',
+          'Bob',
+          'Carol',
+          'David',
+          'Elen',
+        ]
+      })
+
   t.equal($$('.ac-menu').length, 5, '5 menu element should exist')
 
   acbox.setMenus([
@@ -87,12 +89,13 @@ test('focus input', function(t) {
   var inputEl = $('#target'),
       acbox = new AcBox(inputEl, {
         menus: [
-          {value: 0, text: 'Alice'},
-          {value: 1, text: 'Bob'},
-          {value: 2, text: 'Carol'},
-          {value: 3, text: 'David'},
-          {value: 4, text: 'Elen'},
-        ]})
+          'Alice',
+          'Bob',
+          'Carol',
+          'David',
+          'Elen',
+        ]
+      })
 
   t.equal(window.getComputedStyle($('.ac-menu-container')).display, 'none', 'in default, menu should be collapsed')
   inputEl.dispatchEvent(new window.MouseEvent('focus'))
@@ -106,12 +109,13 @@ test('blur input', function(t) {
   var inputEl = $('#target'),
       acbox = new AcBox(inputEl, {
         menus: [
-          {value: 0, text: 'Alice'},
-          {value: 1, text: 'Bob'},
-          {value: 2, text: 'Carol'},
-          {value: 3, text: 'David'},
-          {value: 4, text: 'Elen'},
-        ]})
+          'Alice',
+          'Bob',
+          'Carol',
+          'David',
+          'Elen',
+        ]
+      })
 
   inputEl.dispatchEvent(new window.MouseEvent('focus'))
   t.notEqual(window.getComputedStyle($('.ac-menu-container')).display, 'none', 'focus to input, and menu should be expanded')
@@ -127,12 +131,13 @@ test('click menu', function(t) {
   var inputEl = $('#target'),
       acbox = new AcBox(inputEl, {
         menus: [
-          {value: 0, text: 'Alice'},
-          {value: 1, text: 'Bob'},
-          {value: 2, text: 'Carol'},
-          {value: 3, text: 'David'},
-          {value: 4, text: 'Elen'},
-        ]})
+          'Alice',
+          'Bob',
+          'Carol',
+          'David',
+          'Elen',
+        ]
+      })
 
   inputEl.dispatchEvent(new window.MouseEvent('focus'))
   t.notEqual(window.getComputedStyle($('.ac-menu-container')).display, 'none', 'focus to input, and menu should be expanded')
@@ -153,12 +158,13 @@ test('input chars and filter', function(t) {
   var inputEl = $('#target'),
       acbox = new AcBox(inputEl, {
         menus: [
-          {value: 0, text: 'Alice'},
-          {value: 1, text: 'Bob'},
-          {value: 2, text: 'Carol'},
-          {value: 3, text: 'David'},
-          {value: 4, text: 'Elen'},
-        ]})
+          'Alice',
+          'Bob',
+          'Carol',
+          'David',
+          'Elen',
+        ]
+      })
 
   inputEl.dispatchEvent(new window.MouseEvent('focus'))
   t.notEqual(window.getComputedStyle($('.ac-menu-container')).display, 'none', 'focus to input, and menu should be expanded')
@@ -185,12 +191,13 @@ test('click deleter', function(t) {
   var inputEl = $('#target'),
       acbox = new AcBox(inputEl, {
         menus: [
-          {value: 0, text: 'Alice'},
-          {value: 1, text: 'Bob'},
-          {value: 2, text: 'Carol'},
-          {value: 3, text: 'David'},
-          {value: 4, text: 'Elen'},
-        ]})
+          'Alice',
+          'Bob',
+          'Carol',
+          'David',
+          'Elen',
+        ]
+      })
 
   inputEl.dispatchEvent(new window.MouseEvent('focus'))
   inputEl.value = 'a'

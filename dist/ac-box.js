@@ -46,7 +46,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 /*
  * https://github.com/keik/ac-box
- * @version v0.1.1
+ * @version v0.2.0
  * @author keik <k4t0.kei@gmail.com>
  * @license MIT
  */
@@ -182,7 +182,7 @@ function AcBox(inputEl, options) {
  */
 objectAssign(AcBox.prototype, {
     /**
-    * @param {Array.<Object>} menus
+    * @param {array.<string>} menus
     */
     setMenus: function setMenus(menus) {
         this.dispatcher.emit('reset', menus);
@@ -247,7 +247,7 @@ function _onInputKeydown(e) {
         case keycode.UP:
         case keycode.DOWN:
             // move focus on menus
-            var newFocusedIndex = undefined;
+            var newFocusedIndex = void 0;
             var _ref = e.keyCode === keycode.UP ? ['previousSibling', 'lastChild'] : ['nextSibling', 'firstChild'];
 
             var _ref2 = _slicedToArray(_ref, 2);
@@ -331,14 +331,14 @@ function _createMenuElements(menus) {
     }
     var fragment = menus.reduce(function (acc, menu) {
         var menuEl = document.createElement('li');
-        menuEl.appendChild(document.createTextNode(menu.text));
+        menuEl.appendChild(document.createTextNode(menu));
         menuEl.className = _this.options.menuClass;
         menuEl.tabIndex = -1;
         acc.appendChild(menuEl);
         return acc;
     }, document.createDocumentFragment());
     this.menuContainerEl.appendChild(fragment) // let html = menus.reduce((acc, menu) => {
-    //   return acc += `<li class="${ this.options.menuClass }" tabindex="-1">${ menu.text }</li>`
+    //   return acc += `<li class="${ this.options.menuClass }" tabindex="-1">${ menu }</li>`
     // }, '')
     // this.menuContainerEl.innerHTML = html
     ;
@@ -381,8 +381,8 @@ function _highlight(el, regExp) {
     // d('#_highlight')
     // TODO perf
     var text = el.textContent,
-        m = undefined,
-        lastlast = undefined,
+        m = void 0,
+        lastlast = void 0,
         html = '';
     while (m = regExp.exec(text)) {
         html += text.substring(lastlast, m.index) + '<strong>' + text.substring(m.index, regExp.lastIndex) + '</strong>';

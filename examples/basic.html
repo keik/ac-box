@@ -38,7 +38,7 @@
           url: './db.json'
         }).done(function(msg) {
           var menus = msg.countries.map(function(country) {
-            return {value: country.id, text: country.name};
+            return  country.name;
           });
           acbox.setMenus(menus);
         });
