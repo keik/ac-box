@@ -1,6 +1,6 @@
 {
   "name": "ac-box",
-  "version": "0.1.2-pre",
+  "version": "0.2.0",
   "description": "no-dependency autocomplete + combobox UI library",
   "main": "src/ac-box.js",
   "scripts": {

@@ -1,6 +1,6 @@
 /*
  * https://github.com/keik/ac-box
- * @version v0.1.2-pre
+ * @version v0.2.0
  * @author keik <k4t0.kei@gmail.com>
  * @license MIT
  */
