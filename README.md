@@ -1,6 +1,6 @@
 # ac-box
 
-no-dependency autocomplete + combobox library ([demo](http://keik.info/ac-box/examples/))
+no-dependency, lightweight autocomplete combobox UI library ([demo](http://keik.info/ac-box/examples/))
 
 ![](https://github.com/keik/ac-box/raw/master/screenshot.png)
 
@@ -17,23 +17,49 @@ acbox.setMenus([
 ])
 ```
 
-when `require` ac-box, babel + es2015 preset are required
+
+# Installation
+
+## Node
+
+```
+npm install ac-box
+```
+
+```javascript
+var AcBox = require('ac-box')
+```
+
+When using with [Browserify](https://github.com/substack/node-browserify), `babelily` and `babel-preset-es2015` are required.
+
+
+## Browser
+
+Download via `npm` or [releases](https://github.com/keik/ac-box/releases) and load standalone build version [dist/ac-box.js](./dist/ac-box.js)
+
+```html
+<script src="ac-box/dist/ac-box.js"></script>
+<script>
+  var inputEl = document.querySelector('input'),
+      acbox = new AcBox(inputEl)
+</script>
+```
 
 
 # Styling
 
-position related properties will be configured automatically
+Position related CSS properties will be configured automatically.
 
-on the other hand, decoration related properties such like `border` or `background-color` will not be configured,
-so you have to configure CSS for menu container element or menu elements, etc. see [source of demo](https://github.com/keik/ac-box/blob/master/examples/basic.html)
+On the other hand, decoration related properties like `border` or `background-color` will not be configured automatically,
+so we have to configure CSS for menu container element or menu elements, etc. see [source of demo](https://github.com/keik/ac-box/blob/master/examples/basic.html)
 
 
 # API
 
 ## `new AcBox(inputEl[, options])`
 
-make specified `inputEl` to autocomplete combobox
-`inputEl` need to be `HTMLInputElement`
+Make specified `inputEl` to autocomplete combobox.
+`inputEl` need to be `HTMLInputElement`.
 
 `options` need to be `object` and following property are available:
 
@@ -55,14 +81,14 @@ Class name for expand/collaspe button. Default value is `ac-expander`
 
 ## `AcBox#setMenus(menus)`
 
-reset menus with specified `menus`
+Reset menus with specified `menus`.
 
 * {`array.<object>`} `menus`
 
 
 ## `AcBox#destroy()`
 
-destroy DOM elements and inner objects related to ac-box
+Destroy DOM elements and inner objects related to ac-box.
 
 
 # License
