@@ -49,5 +49,9 @@
     "presets": [
       "es2015"
     ]
-  }
+  },
+  "files": [
+    "src",
+    "dist"
+  ]
 }
