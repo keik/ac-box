@@ -165,7 +165,7 @@ function AcBox(inputEl, options) {
 objectAssign(AcBox.prototype, {
 
   /**
-   * @param {Array.<Object>} menus
+   * @param {array.<string>} menus
    */
   setMenus: function(menus) {
     d('#setMenus')
@@ -363,7 +363,7 @@ function _createMenuElements(menus) {
   }
   let fragment = menus.reduce((acc, menu) => {
     let menuEl = document.createElement('li')
-    menuEl.appendChild(document.createTextNode(menu.text))
+    menuEl.appendChild(document.createTextNode(menu))
     menuEl.className = this.options.menuClass
     menuEl.tabIndex = -1
     acc.appendChild(menuEl)
@@ -372,7 +372,7 @@ function _createMenuElements(menus) {
   this.menuContainerEl.appendChild(fragment)
 
   // let html = menus.reduce((acc, menu) => {
-  //   return acc += `<li class="${ this.options.menuClass }" tabindex="-1">${ menu.text }</li>`
+  //   return acc += `<li class="${ this.options.menuClass }" tabindex="-1">${ menu }</li>`
   // }, '')
   // this.menuContainerEl.innerHTML = html
 }

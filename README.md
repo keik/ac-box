@@ -11,9 +11,9 @@ var inputEl = document.querySelector('input'),
     acbox = new AcBox(inputEl)
 
 acbox.setMenus([
-  {text: 'Alice'},
-  {text: 'Bob'},
-  {text: 'Carol'}
+  'Alice',
+  'Bob',
+  'Carol'
 ])
 ```
 
@@ -63,8 +63,8 @@ Make specified `inputEl` to autocomplete combobox.
 
 `options` need to be `object` and following property are available:
 
-* {`array.<object>`} `menus` -
-Menus for suggestions. Default value is `[]`. A menu object need `text` property, such like `[{text: 'Alice'}, {text: 'Bob'}, {text: 'Carol'}]`.
+* {`array.<string>`} `menus` -
+Menus for suggestions. Default value is `[]`. Menus must be `array` of `string` like `['Alice', 'Bob', 'Carol']`.
 
 * {`string`} `menuContainerClass` -
 Class name for menus container element. Default value is `ac-menu-container`.
@@ -83,7 +83,7 @@ Class name for expand/collaspe button. Default value is `ac-expander`
 
 Reset menus with specified `menus`.
 
-* {`array.<object>`} `menus`
+* {`array.<string>`} `menus`
 
 
 ## `AcBox#destroy()`
