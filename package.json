@@ -4,6 +4,7 @@
   "description": "no-dependency autocomplete + combobox UI library",
   "main": "src/ac-box.js",
   "scripts": {
+    "test": "make test",
     "version": "make all && git add . && git add -f dist"
   },
   "repository": {
