@@ -31,14 +31,14 @@
     "browserify": "^13.0.0",
     "budo": "^8.0.4",
     "debug": "^2.2.0",
-    "eslint": "^1.10.3",
+    "eslint": "^2.3.0",
     "jquery": "^2.2.0",
     "jsdom": "^8.0.2",
     "mocha": "^2.4.5",
     "power-assert": "^1.2.0",
     "tape": "^4.4.0",
     "uglify-js": "^2.6.1",
-    "undebuggify": "^0.1.0"
+    "undebuggify": "^1.0.1"
   },
   "browserify": {
     "transform": [
