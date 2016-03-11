@@ -1,5 +1,8 @@
 # ac-box
 
+[![travis-ci](https://img.shields.io/travis/keik/ac-box.svg?style=flat-square)](https://travis-ci.org/keik/ac-box)
+[![npm-version](https://img.shields.io/npm/v/ac-box.svg?style=flat-square)](https://npmjs.org/package/ac-box)
+
 no-dependency, lightweight autocomplete combobox UI library ([demo](http://keik.info/ac-box/examples/))
 
 ![](https://github.com/keik/ac-box/raw/master/screenshot.png)
