@@ -33,7 +33,7 @@ npm install ac-box
 var AcBox = require('ac-box')
 ```
 
-When using with [Browserify](https://github.com/substack/node-browserify), `babelily` and `babel-preset-es2015` are required.
+When using with [Browserify](https://github.com/substack/node-browserify), `babelify` and `babel-preset-es2015` are required.
 
 
 ## Browser
